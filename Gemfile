@@ -19,6 +19,7 @@ gem 'webpacker', '~> 4.0'
 gem 'haml-rails', '2.0.1'
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rspec-rails', '3.9.0'
 end
 
 group :development do
