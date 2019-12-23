@@ -1,0 +1,20 @@
+require:
+  - rubocop-rails
+
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - bin/yarn
+    - bin/bundle
+    - node_modules/node-sass/src/libsass/contrib/libsass.spec
+    - node_modules/node-sass/src/libsass/extconf.rb
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Metrics/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 30
+Metrics/AbcSize:
+  Max: 30
