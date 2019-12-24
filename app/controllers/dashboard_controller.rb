@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
   def index
-    @data = "lorem ipsum"
+    @data = 'lorem ipsum'
   end
 end
