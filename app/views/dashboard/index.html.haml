@@ -1,4 +1,6 @@
-= @data
-= link_to "Logout", destroy_user_session_path, :method => :delete
-%button.btn.btn-success
-  Hello
+%div.float-right.mr-4
+  = link_to "Logout", destroy_user_session_path, :method => :delete, :class => "btn btn-info"
+%form
+  = file_field :user, :file
+  %button.btn.btn-success
+    Send file
