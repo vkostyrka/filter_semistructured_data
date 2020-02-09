@@ -7,6 +7,7 @@ ruby '2.6.2'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'bootstrap', '4.4.1'
+gem 'carrierwave', '2.0.2'
 gem 'devise', '4.7.1'
 gem 'haml-rails', '2.0.1'
 gem 'jbuilder', '~> 2.7'
