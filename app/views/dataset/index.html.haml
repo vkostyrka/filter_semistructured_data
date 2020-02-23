@@ -1,6 +1,6 @@
 %div.float-right.mr-4
   = link_to "Logout", destroy_user_session_path, :method => :delete, :class => "btn btn-info"
-%form
-  = file_field :user, :file
-  %button.btn.btn-success
-    Send file
+= form_with model: @dataset, url: dataset_index_url do |f|
+  = f.file_field :file
+  = f.select :file_format, options_for_select(@dataset_formats)
+  = f.submit("Create")
