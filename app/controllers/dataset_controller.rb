@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController
+class DatasetController < ApplicationController
   before_action :authenticate_user!
 
   def index
