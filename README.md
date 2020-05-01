@@ -4,11 +4,11 @@
 To run this project you need
 
 ##### Install ruby
-Required version of Ruby version 2.6.2
+Required version of Ruby version 2.7.0
 You can use rvm for that https://rvm.io/rvm/install. Than install needed version and use ti for that folder:
 
-    rvm install ruby-2.6.2
-    rvm use ruby-2.6.2
+    rvm install ruby-2.7.0
+    rvm use ruby-2.7.0
 
 ##### Install PostgreSQL
 [official site](https://www.postgresql.org/download/). You need to create database and user:
