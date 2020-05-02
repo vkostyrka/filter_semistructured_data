@@ -1,3 +1,18 @@
 %h2 Edit user
-= form_tag(user_path(@user), :method => "put")
-
+= form_with(url: user_url, method: "patch") do
+  .row
+    .col-2
+      %div
+        = label_tag(:first_name, "First name")
+      %div
+        = label_tag(:last_name, "Last name")
+      %div
+        = label_tag(:email, "Email")
+    .col-10
+      %div
+        = text_field(:user, :first_name, value: @user.first_name)
+      %div
+        = text_field(:user, :last_name, value: @user.last_name)
+      %div
+        = email_field(:user, :email, value: @user.email)
+    = submit_tag("Update")

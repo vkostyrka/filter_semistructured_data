@@ -7,6 +7,13 @@ class DatasetController < ApplicationController
     @datasets = Dataset.where(user: current_user)
   end
 
+  def show
+    @dataset = Dataset.find(params[:id])
+    unless current_user.id == @dataset.user_id
+      redirect_to root_path, alert: "It's not your dataset"
+    end
+  end
+
   def create
     @dataset = Dataset.new(dataset_params.merge(user: current_user))
     if @dataset.save

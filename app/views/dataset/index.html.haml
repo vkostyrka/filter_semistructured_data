@@ -1,5 +1,26 @@
 %div.float-right.mr-4
+%h5 Add dataset
 = form_with model: @dataset, url: dataset_index_url do |f|
   = f.file_field :file
   = f.select :file_format, options_for_select(@dataset_formats)
   = f.submit("Create")
+
+- if @datasets.length == 0
+  %h5 Your datasets list is empty
+- else
+  %h5 Your datasets
+  %table.table.table-hover
+    %thead
+      %tr
+        %th{:scope => "col"} #
+        %th{:scope => "col"} Name
+        %th{:scope => "col"} Format
+        %th{:scope => "col"} Show
+    %tbody
+      - @datasets.each_with_index do |dataset_item, index|
+        %tr
+          %th{:scope => "row"} #{index+1}
+          %td #{dataset_item.file.identifier}
+          %td #{dataset_item.file_format}
+          %td
+            = link_to "Show file", dataset_path(dataset_item), class: 'btn btn-info'
