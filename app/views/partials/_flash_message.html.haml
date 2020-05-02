@@ -1,0 +1,18 @@
+- if notice
+  #success-alert.alert.alert-success
+    %button.close{"data-dismiss" => "alert", :type => "button"} x
+    %strong
+      =notice
+- if alert
+  #danger-alert.alert.alert-danger
+    %button.close{"data-dismiss" => "alert", :type => "button"} x
+    %strong
+      =alert
+
+:javascript
+  $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+  $("#success-alert").slideUp(500);
+  });
+  $("#danger-alert").fadeTo(2000, 500).slideUp(500, function(){
+  $("#danger-alert").slideUp(500);
+  });

@@ -1,0 +1,12 @@
+- if current_user
+  %nav.navbar.navbar-light.bg-light
+    %a.navbar-brand{:href => root_path} Universal Parser
+    .pull_right
+      .btn-group.dropleft
+        %button.btn.btn-secondary.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+          = current_user.first_name
+        .dropdown-menu
+          %a.dropdown-item{:href => edit_user_path(current_user)} Edit Profile
+          .dropdown-divider
+          = link_to "Logout", destroy_user_session_path, method: :delete, class: 'dropdown-item'
+

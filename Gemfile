@@ -6,7 +6,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.0'
 
 gem 'bootsnap', '>= 1.4.2', require: false
-gem 'bootstrap', '4.4.1'
 gem 'carrierwave', '2.0.2'
 gem 'devise', '4.7.1'
 gem 'haml-rails', '2.0.1'
@@ -18,6 +17,7 @@ gem 'rails', '~> 6.0.2', '>= 6.0.2.1'
 gem 'rubocop', '0.78.0'
 gem 'rubocop-rails', '2.4.0'
 gem 'sass-rails', '>= 6'
+gem 'simple_form', '5.0.2'
 gem 'turbolinks', '~> 5'
 gem 'webpacker', '~> 4.0'
 group :development, :test do
