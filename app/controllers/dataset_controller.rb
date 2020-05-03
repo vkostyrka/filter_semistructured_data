@@ -9,9 +9,10 @@ class DatasetController < ApplicationController
 
   def show
     @dataset = Dataset.find(params[:id])
-    unless current_user.id == @dataset.user_id
-      redirect_to root_path, alert: "It's not your dataset"
-    end
+    @data = CSV.read(@dataset.file.file.file)
+    @headers = @data.shift
+
+    redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
   end
 
   def create
@@ -20,6 +21,16 @@ class DatasetController < ApplicationController
       redirect_to root_path, notice: 'Your menu dataset successful created'
     else
       redirect_to root_path, alert: 'Your dataset not created'
+    end
+  end
+
+  def destroy
+    @dataset = Dataset.find(params[:id])
+    redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
+    if @dataset.destroy
+      redirect_to root_path, notice: 'Your dataset successfully deleted'
+    else
+      redirect_to root_path, notice: "Your dataset wasn't deleted"
     end
   end
 
