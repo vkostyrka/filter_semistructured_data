@@ -1,6 +1,6 @@
 %div.float-right.mr-4
 %h5 Add dataset
-= form_with model: @dataset, url: dataset_index_url do |f|
+= form_with model: Dataset.new, url: dataset_index_url do |f|
   = f.file_field :file
   = f.select :file_format, options_for_select(@dataset_formats)
   = f.submit("Create")

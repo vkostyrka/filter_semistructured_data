@@ -1,4 +1,14 @@
-%div
-  = @headers
-%div
-  = @data
+%table#data-table
+  %thead
+    %tr
+      - @headers.each do |header|
+        %th #{header}
+  %tbody
+    - @data.each do |row|
+      %tr
+        - row.each do |item|
+          %td #{item}
+:javascript
+  $('#data-table').DataTable( {
+    "pagingType": "full_numbers"
+  } );

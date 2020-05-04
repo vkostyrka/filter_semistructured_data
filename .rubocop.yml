@@ -12,7 +12,7 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 Style/Documentation:
   Enabled: false
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 Metrics/MethodLength:
   Max: 30

@@ -1,9 +1,10 @@
+require 'csv'
+
 class DatasetController < ApplicationController
   before_action :authenticate_user!
 
   def index
     @dataset_formats = Dataset.file_formats.keys
-    @dataset = Dataset.new
     @datasets = Dataset.where(user: current_user)
   end
 
