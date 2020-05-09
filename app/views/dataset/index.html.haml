@@ -1,9 +1,25 @@
-%div.float-right.mr-4
-%h5 Add dataset
-= form_with model: Dataset.new, url: dataset_index_url do |f|
-  = f.file_field :file
-  = f.select :file_format, options_for_select(@dataset_formats)
-  = f.submit("Create")
+.pull-right
+  %button.btn.btn-primary{"data-target" => "#create-dataset-modal", "data-toggle" => "modal"}
+    Create dataset
+#create-dataset-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-dataset-modal", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5.modal-title Create new dataset
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal"}
+          %span{"aria-hidden" => "true"} ×
+      = form_with model: Dataset.new, url: dataset_index_path do |f|
+        .modal-body
+          .row
+            .col-3
+              = f.label :file
+              = f.label :file_format
+            .col-9
+              = f.file_field :file
+              = f.select :file_format, options_for_select(Dataset.file_formats.keys)
+
+        .modal-footer
+          = f.submit("Create", class: "btn-primary btn")
 
 - if @datasets.length == 0
   %h5 Your datasets list is empty

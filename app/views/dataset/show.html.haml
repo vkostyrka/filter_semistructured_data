@@ -1,8 +1,37 @@
+%button.btn.btn-primary{"data-target" => "#create-filter-modal", "data-toggle" => "modal"}
+  Create filter
+#create-filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-filter-modal", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5.modal- title Create new filter
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal"}
+          %span{"aria-hidden" => "true"} ×
+      = form_with model: Filter.new, url: filter_index_path do |f|
+        .modal-body
+          .row
+            .col-4
+              = f.label :column_name
+              %br/
+              = f.label :condition
+              %br/
+              = f.label :value
+            .col-8
+              = f.select :column_name, options_for_select(@headers)
+              %br/
+              = f.select :condition, options_for_select(Filter.conditions.keys.map { |item| item.tr('_', ' ') })
+              %br/
+              = f.text_field :value
+              = f.hidden_field :dataset_id, value: @dataset.id
+
+        .modal-footer
+          = f.submit("Create", class: "btn-primary btn")
+
 %table#data-table
   %thead
     %tr
       - @headers.each do |header|
-        %th #{header}
+        %th.text-truncate #{header}
   %tbody
     - @data.each do |row|
       %tr

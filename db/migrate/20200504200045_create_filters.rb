@@ -3,6 +3,7 @@ class CreateFilters < ActiveRecord::Migration[6.0]
     create_table :filters do |t|
       t.integer :condition
       t.string :value
+      t.string :column_name
       t.belongs_to :dataset
 
       t.timestamps
