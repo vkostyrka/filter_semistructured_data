@@ -2,6 +2,7 @@ class FilterController < ApplicationController
   def create
     @filter = Filter.new(filter_params)
     if @filter.save
+      FilterService.build(@filter)
       redirect_to dataset_index_path(filter_params[:id]), notice: 'Your filter successful created'
     else
       redirect_to dataset_index_path(filter_params[:id]), alert: 'Your filter not created'
