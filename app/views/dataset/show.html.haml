@@ -1,5 +1,8 @@
 %button.btn.btn-primary{"data-target" => "#create-filter-modal", "data-toggle" => "modal"}
   Create filter
+%br/
+= label_tag 'Choose filter'
+= select_tag("Choose_filter", options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "applyFilter(this.value, #{@dataset.id})")
 #create-filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-filter-modal", :role => "dialog", :tabindex => "-1"}
   .modal-dialog
     .modal-content
@@ -41,3 +44,11 @@
   $('#data-table').DataTable( {
     "pagingType": "full_numbers"
   } );
+
+  function applyFilter(value, datasetId) {
+    if (value === 'No filter') {
+      window.location.href = `/dataset/${datasetId}`
+    } else {
+      window.location.href = `/dataset/${datasetId}?filter=${value}`
+    }
+  }

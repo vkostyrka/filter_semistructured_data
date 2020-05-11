@@ -9,9 +9,14 @@ class DatasetController < ApplicationController
 
   def show
     @dataset = Dataset.find(params[:id])
-    @data = CSV.read(@dataset.file.file.file)
-    @headers = @data.shift
-
+    @filters = @dataset.filters.each(&:filter_name)
+    @headers = CSV.open(@dataset.file.file.file, 'r', &:first)
+    @data = if params[:filter]
+              GetFilteredDataService.build(params[:filter])
+            else
+              # show all file
+              CSV.read(@dataset.file.file.file)
+            end
     redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
   end
 
