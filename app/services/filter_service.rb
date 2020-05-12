@@ -3,16 +3,16 @@ require 'csv'
 class FilterService
   class << self
     def build(filter)
-      if filter.dataset.csv?
-        csv_parsed = CSV.read(filter.dataset.file.file.file)
-        headers = csv_parsed.shift
-        filtered_column_index = headers.index(filter.column_name)
-        filtered_id = []
-        csv_parsed.each_with_index do |row, index|
-          filtered_id << index if condition_fulfilled?(filter, row[filtered_column_index])
-        end
-        filter.update(filtered_id: filtered_id)
+      return unless filter.dataset.csv?
+
+      csv_parsed = CSV.read(filter.dataset.file.file.file)
+      headers = csv_parsed.shift
+      filtered_column_index = headers.index(filter.column_name)
+      filtered_id = []
+      csv_parsed.each_with_index do |row, index|
+        filtered_id << index if condition_fulfilled?(filter, row[filtered_column_index])
       end
+      filter.update(filtered_id: filtered_id)
     end
 
     private
