@@ -12,7 +12,7 @@ class DatasetController < ApplicationController
     @filters = @dataset.filters.each(&:filter_name)
     @headers = CSV.open(@dataset.file.file.file, 'r', &:first)
     @data = if params[:filter]
-              GetFilteredDataService.build(params[:filter])
+              Filter.get_filtered_data(params[:filter])
             else
               # show all file
               CSV.read(@dataset.file.file.file)
