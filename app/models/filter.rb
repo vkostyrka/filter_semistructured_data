@@ -17,7 +17,7 @@ class Filter < ApplicationRecord
     elsif filter.dataset.json?
       JSON.parse(File.read(filter.dataset.file.file.file)).map(&:values).values_at(*filter.filtered_id)
     else
-      raise "Unknown format"
+      raise 'Unknown format'
     end
   end
 
@@ -26,25 +26,23 @@ class Filter < ApplicationRecord
   end
 
   def filter_process
+    filtered_id = []
     if dataset.csv?
       csv_parsed = CSV.read(dataset.file.file.file)
       headers = csv_parsed.shift
       filtered_column_index = headers.index(column_name)
-      filtered_id = []
       csv_parsed.each_with_index do |row, index|
         filtered_id << index if condition_fulfilled?(self, row[filtered_column_index])
       end
-      update(filtered_id: filtered_id)
     elsif dataset.json?
       json_parsed = JSON.parse(File.read(dataset.file.file.file))
-      filtered_id = []
       json_parsed.each_with_index do |hash, index|
         filtered_id << index if condition_fulfilled?(self, hash[column_name])
       end
-      update(filtered_id: filtered_id)
     else
       raise 'Unknown format for dataset'
     end
+    update(filtered_id: filtered_id)
   end
 
   private

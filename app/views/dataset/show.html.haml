@@ -41,14 +41,28 @@
         - row.each do |item|
           %td #{item}
 :javascript
-  $('#data-table').DataTable( {
-    "pagingType": "full_numbers"
-  } );
+  var table = $('#data-table').DataTable();
 
   function applyFilter(value, datasetId) {
+    let queryURL
     if (value === 'No filter') {
-      window.location.href = `/dataset/${datasetId}`
+        window.location.href = `/dataset/${datasetId}`
     } else {
-      window.location.href = `/dataset/${datasetId}?filter=${value}`
+        queryURL = `/dataset/${datasetId}?filter=${value}`
+        fetch(queryURL, {
+          headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+           }
+        })
+        .then((response) => response.json())
+        .then((responseData) => {
+          table.clear();
+          responseData['data'].forEach(row => {
+            table.row.add(row);
+          })
+          table.draw();
+        });
     }
   }
+

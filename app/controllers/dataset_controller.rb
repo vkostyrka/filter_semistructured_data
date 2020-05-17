@@ -17,6 +17,10 @@ class DatasetController < ApplicationController
               get_all_dataset(@dataset)
             end
     redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
+    respond_to do |format|
+      format.html
+      format.json { render json: { data: @data } }
+    end
   end
 
   def create
