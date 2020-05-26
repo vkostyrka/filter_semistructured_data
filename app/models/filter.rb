@@ -10,14 +10,50 @@ class Filter < ApplicationRecord
     start_with: 4
   }
 
-  def self.get_filtered_data(filter_params)
-    filter = Filter.find(filter_params)
-    if filter.dataset.csv?
-      CSV.read(filter.dataset.file.file.file)[1..-1].values_at(*filter.filtered_id)
-    elsif filter.dataset.json?
-      JSON.parse(File.read(filter.dataset.file.file.file)).map(&:values).values_at(*filter.filtered_id)
-    else
-      raise 'Unknown format'
+  FILTER_CONDITION = %w[or and].freeze
+
+  class << self
+    def get_filtered_data(filter_params, dataset)
+      filter_ids = filter_params.split(Regexp.union(FILTER_CONDITION))
+      conditions = filter_params.split(Regexp.union(filter_ids))
+      conditions.shift
+      raise 'Uncorrect ids and conditions count' if filter_ids.length != conditions.length + 1
+
+      filter_result = make_complex_filter(filter_ids, conditions, dataset)
+
+      dataset.data_for_filtered_ids(filter_result)
+    end
+
+    def filtered_ids(filter_id, dataset)
+      return Filter.find(filter_id).filtered_id unless filter_id.to_i.zero?
+
+      count_rows = dataset.count_row - 1
+      (0...count_rows).to_a
+    end
+
+    def make_complex_filter(filter_ids, conditions, dataset)
+      return Filter.filtered_ids(filter_ids[0], dataset) if conditions.empty?
+
+      ids_from_first_filter = Filter.filtered_ids(filter_ids.shift, dataset)
+      ids_from_second_filter = Filter.filtered_ids(filter_ids.shift, dataset)
+      result = combine_filter(ids_from_first_filter, ids_from_second_filter, conditions.shift)
+
+      return result if conditions.empty?
+
+      until conditions.empty?
+        new_filter = Filter.filtered_ids(filter_ids.shift, dataset)
+        new_conditions = conditions.shift
+        combine_filter(result, new_filter, new_conditions)
+      end
+
+      result
+    end
+
+    def combine_filter(first_filter, second_filter, condition)
+      case condition
+      when 'and' then first_filter & second_filter
+      when 'or'  then first_filter | second_filter
+      end
     end
   end
 
@@ -52,7 +88,7 @@ class Filter < ApplicationRecord
     when 'less'
       field.to_i < filter.value.to_i
     when 'equal'
-      field == filter.value
+      field.to_s == filter.value.to_s
     when 'more'
       field.to_i > filter.value.to_i
     when 'include'

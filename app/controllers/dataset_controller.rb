@@ -1,5 +1,3 @@
-require 'csv'
-
 class DatasetController < ApplicationController
   before_action :authenticate_user!
 
@@ -9,14 +7,16 @@ class DatasetController < ApplicationController
 
   def show
     @dataset = Dataset.find(params[:id])
-    @filters = @dataset.filters.each(&:filter_name)
-    @headers = get_dataset_headers(@dataset)
-    @data = if params[:filter]
-              Filter.get_filtered_data(params[:filter])
-            else
-              get_all_dataset(@dataset)
-            end
+
     redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
+
+    @filters = @dataset.filters.each(&:filter_name)
+    @headers = @dataset.headers
+    @data = if params[:filter]
+              Filter.get_filtered_data(params[:filter], @dataset)
+            else
+              @dataset.all_data
+            end
     respond_to do |format|
       format.html
       format.json { render json: { data: @data } }
@@ -43,26 +43,6 @@ class DatasetController < ApplicationController
   end
 
   private
-
-  def get_dataset_headers(dataset)
-    if dataset.csv?
-      CSV.open(dataset.file.file.file, 'r', &:first)
-    elsif dataset.json?
-      JSON.parse(File.read(dataset.file.file.file))[0].keys
-    else
-      raise 'Unknown format'
-    end
-  end
-
-  def get_all_dataset(dataset)
-    if dataset.csv?
-      CSV.read(@dataset.file.file.file)
-    elsif dataset.json?
-      JSON.parse(File.read(Dataset.last.file.file.file)).map(&:values)
-    else
-      raise 'Unknown format'
-    end
-  end
 
   def dataset_params
     params.require(:dataset).permit(:file_format, :file)

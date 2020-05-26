@@ -1,8 +1,26 @@
 %button.btn.btn-primary{"data-target" => "#create-filter-modal", "data-toggle" => "modal"}
   Create filter
+%button.btn.btn-info{ onClick: "addFilter()" }
+  Add filter
+%button.btn.btn-danger{ onClick: "removeLastFilter()" }
+  Remove last filter
 %br/
-= label_tag 'Choose filter'
-= select_tag("Choose_filter", options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "applyFilter(this.value, #{@dataset.id})")
+Filter Dashboard
+#filter-dashboard
+  = select_tag('first-filter', options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "applyFilter()")
+
+%table#data-table
+  %thead
+    %tr
+      - @headers.each do |header|
+        %th.text-truncate #{header}
+  %tbody
+    - @data.each do |row|
+      %tr
+        - row.each do |item|
+          %td #{item}
+
+
 #create-filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-filter-modal", :role => "dialog", :tabindex => "-1"}
   .modal-dialog
     .modal-content
@@ -30,39 +48,49 @@
         .modal-footer
           = f.submit("Create", class: "btn-primary btn")
 
-%table#data-table
-  %thead
-    %tr
-      - @headers.each do |header|
-        %th.text-truncate #{header}
-  %tbody
-    - @data.each do |row|
-      %tr
-        - row.each do |item|
-          %td #{item}
 :javascript
   var table = $('#data-table').DataTable();
 
-  function applyFilter(value, datasetId) {
-    let queryURL
-    if (value === 'No filter') {
-        window.location.href = `/dataset/${datasetId}`
-    } else {
-        queryURL = `/dataset/${datasetId}?filter=${value}`
-        fetch(queryURL, {
-          headers : {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-           }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-          table.clear();
-          responseData['data'].forEach(row => {
-            table.row.add(row);
-          })
-          table.draw();
-        });
-    }
+  function applyFilter() {
+    let queryParam = ""
+    $('#filter-dashboard').children('select').each(function () {
+      if (this.value === "No filter") {
+        queryParam += "0"
+      } else {
+        queryParam += this.value
+      }
+    });
+
+    let datasetId = window.location.href.split('/')[4]
+    let queryURL = `/dataset/${datasetId}?filter=${queryParam}`
+    fetch(queryURL, {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData)
+      table.clear();
+      responseData['data'].forEach(row => {
+        table.row.add(row);
+      })
+      table.draw();
+    });
   }
 
+  function addFilter() {
+    let selectBlock = $("#first-filter").clone()
+    let conditionSelect = '<select onChange=applyFilter()><option>and</option><option>or</option></select>'
+
+    $("#filter-dashboard").append(conditionSelect)
+    $("#filter-dashboard").append(selectBlock)
+  }
+
+  function removeLastFilter() {
+    if ($("#filter-dashboard").childElementCount !== 1) {
+      $('#filter-dashboard select').last().remove();
+      $('#filter-dashboard select').last().remove();
+    }
+  }
