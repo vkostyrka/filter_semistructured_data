@@ -1,4 +1,4 @@
-.pull-right
+.pull-right.my-3
   %button.btn.btn-primary{"data-target" => "#create-dataset-modal", "data-toggle" => "modal"}
     Create dataset
 #create-dataset-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-dataset-modal", :role => "dialog", :tabindex => "-1"}
@@ -15,7 +15,7 @@
               = f.label :file
               = f.label :file_format
             .col-9
-              = f.file_field :file
+              = f.file_field :file, class: 'mw-100'
               = f.select :file_format, options_for_select(Dataset.file_formats.keys)
 
         .modal-footer

@@ -1,10 +1,11 @@
-%button.btn.btn-primary{"data-target" => "#create-filter-modal", "data-toggle" => "modal"}
-  Create filter
-%button.btn.btn-info{ onClick: "addFilter()" }
-  Add filter
-%button.btn.btn-danger{ onClick: "removeLastFilter()" }
-  Remove last filter
-%br/
+.m-3
+  %button.btn.btn-primary{"data-target" => "#create-filter-modal", "data-toggle" => "modal"}
+    Create filter
+  %button.btn.btn-info{ onClick: "addFilter()" }
+    Add condition
+  %button.btn.btn-danger{ onClick: "removeLastFilter()" }
+    Remove last condition
+
 Filter Dashboard
 #filter-dashboard
   = select_tag('first-filter', options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "applyFilter()")
@@ -38,7 +39,7 @@ Filter Dashboard
               %br/
               = f.label :value
             .col-8
-              = f.select :column_name, options_for_select(@headers)
+              = f.select :column_name, options_for_select(@headers), {}, class: 'mw-100'
               %br/
               = f.select :condition, options_for_select(Filter.conditions.keys.map { |item| item.tr('_', ' ') })
               %br/
@@ -71,7 +72,6 @@ Filter Dashboard
     })
     .then((response) => response.json())
     .then((responseData) => {
-      console.log(responseData)
       table.clear();
       responseData['data'].forEach(row => {
         table.row.add(row);
@@ -89,7 +89,7 @@ Filter Dashboard
   }
 
   function removeLastFilter() {
-    if ($("#filter-dashboard").childElementCount !== 1) {
+    if ($("#filter-dashboard select").length !== 1) {
       $('#filter-dashboard select').last().remove();
       $('#filter-dashboard select').last().remove();
     }

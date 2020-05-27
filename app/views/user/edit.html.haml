@@ -15,4 +15,5 @@
         = text_field(:user, :last_name, value: @user.last_name)
       %div
         = email_field(:user, :email, value: @user.email)
-    = submit_tag("Update")
+      %br
+      = submit_tag("Update", class: 'btn btn-warning')
