@@ -43,4 +43,16 @@ class Dataset < ApplicationRecord
       raise 'Unknown format'
     end
   end
+
+  def counts
+    max_count = count_row
+    i = 10
+    counts = []
+
+    while i < max_count
+      counts << i
+      i *= 10
+    end
+    counts << max_count
+  end
 end

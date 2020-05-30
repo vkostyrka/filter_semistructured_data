@@ -7,8 +7,12 @@
     Remove last condition
 
 Filter Dashboard
-#filter-dashboard
-  = select_tag('first-filter', options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "applyFilter()")
+.my-2
+  Counts:
+  = select_tag('select-counts', options_for_select(@counts), onchange: "getData()")
+  Filters:
+  %span#filter-dashboard
+    = select_tag('first-filter', options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "getData()")
 
 %table#data-table
   %thead
@@ -50,9 +54,9 @@ Filter Dashboard
           = f.submit("Create", class: "btn-primary btn")
 
 :javascript
-  var table = $('#data-table').DataTable();
+  var table = $('#data-table').DataTable({ 'paging': false });
 
-  function applyFilter() {
+  function getData() {
     let queryParam = ""
     $('#filter-dashboard').children('select').each(function () {
       if (this.value === "No filter") {
@@ -62,8 +66,14 @@ Filter Dashboard
       }
     });
 
+    let count = $('#select-counts')[0].value
+
+    updateTable(`filter=${queryParam}&count=${count}`)
+  }
+
+  function updateTable(getParams) {
     let datasetId = window.location.href.split('/')[4]
-    let queryURL = `/dataset/${datasetId}?filter=${queryParam}`
+    let queryURL = `/dataset/${datasetId}?${getParams}`
     fetch(queryURL, {
       headers : {
         'Content-Type': 'application/json',

@@ -12,11 +12,16 @@ class DatasetController < ApplicationController
 
     @filters = @dataset.filters.each(&:filter_name)
     @headers = @dataset.headers
+
+    params[:count] ||= 10
+    @counts = @dataset.counts
+
     @data = if params[:filter]
-              Filter.get_filtered_data(params[:filter], @dataset)
+              Filter.get_filtered_data(params[:filter], @dataset)[0...params[:count].to_i]
             else
-              @dataset.all_data
+              @dataset.all_data[0...params[:count].to_i]
             end
+
     respond_to do |format|
       format.html
       format.json { render json: { data: @data } }
