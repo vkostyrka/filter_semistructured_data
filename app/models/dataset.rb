@@ -26,7 +26,7 @@ class Dataset < ApplicationRecord
 
   def data_for_filtered_ids(ids, count)
     if csv?
-      CSV.foreach(file.file.file).take(ids[count]).values_at(*ids[0...count])
+      all_data(ids[count]).values_at(*ids[0...count])
     elsif json?
       JSON.parse(File.read(file.file.file)).map(&:values).values_at(*ids)[0...count]
     else
