@@ -14,12 +14,14 @@ class DatasetController < ApplicationController
     @headers = @dataset.headers
 
     params[:count] ||= 10
+    params[:filter] ||= '0'
+
     @counts = @dataset.counts
 
-    @data = if params[:filter]
-              Filter.get_filtered_data(params[:filter], @dataset)[0...params[:count].to_i]
+    @data = if params[:filter] == '0'
+              @dataset.all_data(params[:count].to_i)
             else
-              @dataset.all_data[0...params[:count].to_i]
+              Filter.get_filtered_data(params[:filter], @dataset, params[:count].to_i)
             end
 
     respond_to do |format|
@@ -31,6 +33,7 @@ class DatasetController < ApplicationController
   def create
     @dataset = Dataset.new(dataset_params.merge(user: current_user))
     if @dataset.save
+      @dataset.update(count_row: @dataset.calculate_rows)
       redirect_to root_path, notice: 'Your menu dataset successful created'
     else
       redirect_to root_path, alert: 'Your dataset not created'

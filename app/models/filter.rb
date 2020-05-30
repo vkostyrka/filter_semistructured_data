@@ -13,15 +13,16 @@ class Filter < ApplicationRecord
   FILTER_CONDITION = %w[or and].freeze
 
   class << self
-    def get_filtered_data(filter_params, dataset)
+    def get_filtered_data(filter_params, dataset, count)
       filter_ids = filter_params.split(Regexp.union(FILTER_CONDITION))
       conditions = filter_params.split(Regexp.union(filter_ids))
       conditions.shift
+
       raise 'Uncorrect ids and conditions count' if filter_ids.length != conditions.length + 1
 
       filter_result = make_complex_filter(filter_ids, conditions, dataset)
 
-      dataset.data_for_filtered_ids(filter_result)
+      dataset.data_for_filtered_ids(filter_result, count)
     end
 
     def filtered_ids(filter_id, dataset)

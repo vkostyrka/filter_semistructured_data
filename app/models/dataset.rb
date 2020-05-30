@@ -4,11 +4,11 @@ class Dataset < ApplicationRecord
   enum file_format: { csv: 0, json: 1 }
   mount_uploader :file, FileUploader
 
-  def all_data
+  def all_data(count)
     if csv?
-      CSV.read(file.file.file)[1..-1]
+      CSV.foreach(file.file.file).take(count+1)[1..-1]
     elsif json?
-      JSON.parse(File.read(file.file.file)).map(&:values)
+      JSON.parse(File.read(file.file.file)).map(&:values)[0...count]
     else
       raise 'Unknown format'
     end
@@ -24,17 +24,17 @@ class Dataset < ApplicationRecord
     end
   end
 
-  def data_for_filtered_ids(ids)
+  def data_for_filtered_ids(ids, count)
     if csv?
-      CSV.read(file.file.file)[1..-1].values_at(*ids)
+      CSV.foreach(file.file.file).take(ids[count]).values_at(*ids[0...count])
     elsif json?
-      JSON.parse(File.read(file.file.file)).map(&:values).values_at(*ids)
+      JSON.parse(File.read(file.file.file)).map(&:values).values_at(*ids)[0...count]
     else
       raise 'Unknown format'
     end
   end
 
-  def count_row
+  def calculate_rows
     if csv?
       CSV.read(file.file.file).count
     elsif json?
