@@ -276,7 +276,7 @@ GEM
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
-      actionpack (>= 4.0)
+      actionpack (sproc>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     temple (0.8.2)

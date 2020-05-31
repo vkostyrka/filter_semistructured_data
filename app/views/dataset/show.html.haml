@@ -8,13 +8,15 @@
 
 Filter Dashboard
 .my-2
-  Counts:
+  Load first:
   = select_tag('select-counts', options_for_select(@counts), onchange: "getData()")
-  Filters:
+  rows with
+  filters:
   %span#filter-dashboard
     = select_tag('first-filter', options_for_select(['No filter'] + @filters.collect{ |f| [f.filter_name, f.id] }), onchange: "getData()")
 
 %table#data-table
+  #spinner{:hidden => ""}
   %thead
     %tr
       - @headers.each do |header|
@@ -54,7 +56,8 @@ Filter Dashboard
           = f.submit("Create", class: "btn-primary btn")
 
 :javascript
-  var table = $('#data-table').DataTable({ 'paging': false });
+  const table = $('#data-table').DataTable();
+  const spinner = document.getElementById("spinner");
 
   function getData() {
     let queryParam = ""
@@ -74,6 +77,8 @@ Filter Dashboard
   function updateTable(getParams) {
     let datasetId = window.location.href.split('/')[4]
     let queryURL = `/dataset/${datasetId}?${getParams}`
+
+    spinner.removeAttribute('hidden');
     fetch(queryURL, {
       headers : {
         'Content-Type': 'application/json',
@@ -87,20 +92,22 @@ Filter Dashboard
         table.row.add(row);
       })
       table.draw();
+      spinner.setAttribute('hidden', '');
     });
   }
 
   function addFilter() {
     let selectBlock = $("#first-filter").clone()
-    let conditionSelect = '<select onChange=applyFilter()><option>and</option><option>or</option></select>'
-
-    $("#filter-dashboard").append(conditionSelect)
-    $("#filter-dashboard").append(selectBlock)
+    let conditionSelect = '<select onChange=getData()><option>and</option><option>or</option></select>'
+    let filtersBlock = $("#filter-dashboard")
+    filtersBlock.append(conditionSelect)
+    filtersBlock.append(selectBlock)
   }
 
   function removeLastFilter() {
-    if ($("#filter-dashboard select").length !== 1) {
-      $('#filter-dashboard select').last().remove();
-      $('#filter-dashboard select').last().remove();
+    let selects = $("#filter-dashboard select");
+    if (selects.length !== 1) {
+      selects.last().remove();
+      selects.last().remove();
     }
   }
