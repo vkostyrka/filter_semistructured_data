@@ -12,17 +12,9 @@ class DatasetController < ApplicationController
 
     @filters = @dataset.filters.each(&:filter_name)
     @headers = @dataset.headers
-
-    params[:count] ||= 10
-    params[:filter] ||= '0'
-
     @counts = @dataset.counts
 
-    @data = if params[:filter] == '0'
-              @dataset.all_data(params[:count].to_i)
-            else
-              Filter.get_filtered_data(params[:filter], @dataset, params[:count].to_i)
-            end
+    @data = prepare_data(params, @dataset)
 
     respond_to do |format|
       format.html
@@ -54,5 +46,15 @@ class DatasetController < ApplicationController
 
   def dataset_params
     params.require(:dataset).permit(:file_format, :file)
+  end
+
+  def prepare_data(params, dataset)
+    params[:count] ||= 10
+
+    if params[:filter].nil? || params[:filter] == '0'
+      dataset.all_data(params[:count].to_i)
+    else
+      Filter.get_filtered_data(params[:filter], dataset, params[:count].to_i)
+    end
   end
 end

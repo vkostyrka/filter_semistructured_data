@@ -6,7 +6,7 @@ class Dataset < ApplicationRecord
 
   def all_data(count)
     if csv?
-      CSV.foreach(file.file.file).take(count+1)[1..-1]
+      CSV.foreach(file.file.file).take(count + 1)[1..-1]
     elsif json?
       JSON.parse(File.read(file.file.file)).map(&:values)[0...count]
     else
