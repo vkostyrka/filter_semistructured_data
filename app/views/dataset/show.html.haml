@@ -5,6 +5,8 @@
     Add condition
   %button.btn.btn-danger{ onClick: "removeLastFilter()" }
     Remove last condition
+  %button.btn.btn-success{ onClick: "freshFilters()" }
+    Fresh filters
 
 Filter Dashboard
 .my-2
@@ -56,22 +58,26 @@ Filter Dashboard
           = f.submit("Create", class: "btn-primary btn")
 
 :javascript
-  const table = $('#data-table').DataTable();
-  const spinner = document.getElementById("spinner");
+  var table = $('#data-table').DataTable();
+  var spinner = document.getElementById("spinner");
 
   function getData() {
-    let queryParam = ""
-    $('#filter-dashboard').children('select').each(function () {
-      if (this.value === "No filter") {
-        queryParam += "0"
-      } else {
-        queryParam += this.value
-      }
-    });
-
+    let filterParam = makeFilterParamsQuery()
     let count = $('#select-counts')[0].value
 
-    updateTable(`filter=${queryParam}&count=${count}`)
+    updateTable(`filter=${filterParam}&count=${count}`)
+  }
+
+  function makeFilterParamsQuery() {
+    let queryParam = "";
+    $('#filter-dashboard').children('select').each(function () {
+      if (this.value === "No filter") {
+        queryParam += "0";
+      } else {
+        queryParam += this.value;
+      }
+    });
+    return queryParam;
   }
 
   function updateTable(getParams) {
@@ -110,4 +116,8 @@ Filter Dashboard
       selects.last().remove();
       selects.last().remove();
     }
+  }
+
+  function freshFilters() {
+    location.reload();
   }

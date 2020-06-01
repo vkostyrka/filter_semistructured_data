@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2020_05_30_161134) do
     t.bigint "dataset_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "filtered_id", default: [], array: true
+    t.integer "filtered_id", default: [0], array: true
     t.index ["dataset_id"], name: "index_filters_on_dataset_id"
   end
 

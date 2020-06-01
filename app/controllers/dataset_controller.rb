@@ -10,7 +10,7 @@ class DatasetController < ApplicationController
 
     redirect_to root_path, alert: "It's not your dataset" unless current_user.id == @dataset.user_id
 
-    @filters = @dataset.filters.each(&:filter_name)
+    @filters = @dataset.filters.where.not(filtered_id: [0]).each(&:filter_name)
     @headers = @dataset.headers
     @counts = @dataset.counts
 
