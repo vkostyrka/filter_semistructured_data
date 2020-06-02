@@ -3,7 +3,8 @@ class FilterController < ApplicationController
     @filter = Filter.new(filter_params)
     if @filter.save
       FilterProcessJob.perform_later(@filter)
-      redirect_to dataset_path(filter_params[:dataset_id]), notice: 'Your filter is being created. Please refresh the page after a while'
+      notice_message = 'Your filter is being created. Please refresh the page after a while'
+      redirect_to dataset_path(filter_params[:dataset_id]), notice: notice_message
     else
       redirect_to dataset_path(filter_params[:dataset_id]), alert: 'Your filter not created'
     end

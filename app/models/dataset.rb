@@ -27,7 +27,7 @@ class Dataset < ApplicationRecord
   def data_for_filtered_ids(ids, count)
     max_rows_need_to_load = ids[count] || ids.last + 1
     if csv?
-      all_data(max_rows_need_to_load).values_at(*ids)
+      all_data(max_rows_need_to_load).values_at(*ids[0...count])
     elsif json?
       JSON.parse(File.read(file.file.file)).map(&:values).values_at(*ids)[0...count]
     else

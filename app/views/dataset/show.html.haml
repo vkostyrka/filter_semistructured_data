@@ -113,9 +113,9 @@ Filter Dashboard
   function removeLastFilter() {
     let selects = $("#filter-dashboard select");
     if (selects.length !== 1) {
-      selects.last().remove();
-      selects.last().remove();
+      selects.slice(-2).remove()
     }
+    getData()
   }
 
   function freshFilters() {

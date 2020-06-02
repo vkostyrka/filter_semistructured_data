@@ -38,13 +38,12 @@ class Filter < ApplicationRecord
       ids_from_first_filter = Filter.filtered_ids(filter_ids.shift, dataset)
       ids_from_second_filter = Filter.filtered_ids(filter_ids.shift, dataset)
       result = combine_filter(ids_from_first_filter, ids_from_second_filter, conditions.shift)
-
       return result if conditions.empty?
 
       until conditions.empty?
         new_filter = Filter.filtered_ids(filter_ids.shift, dataset)
         new_conditions = conditions.shift
-        combine_filter(result, new_filter, new_conditions)
+        result = combine_filter(result, new_filter, new_conditions)
       end
 
       result
@@ -53,7 +52,7 @@ class Filter < ApplicationRecord
     def combine_filter(first_filter, second_filter, condition)
       case condition
       when 'and' then first_filter & second_filter
-      when 'or'  then first_filter | second_filter
+      when 'or'  then (first_filter | second_filter).sort
       end
     end
   end
