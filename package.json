@@ -1,5 +1,5 @@
 {
-  "name": "universal_parser",
+  "name": "filter_semistructured_data",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.0",

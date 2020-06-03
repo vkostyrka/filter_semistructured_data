@@ -13,8 +13,8 @@ You can use rvm for that https://rvm.io/rvm/install. Than install needed version
 ##### Install PostgreSQL
 [official site](https://www.postgresql.org/download/). You need to create database and user:
 
-    sudo -u postgres createdb universal_parser_development
-    sudo -u postgres createdb universal_parser_test
+    sudo -u postgres createdb filter_semistructured_data_development
+    sudo -u postgres createdb filter_semistructured_data_test
     sudo -u postgres createuser --interactive
 
 
