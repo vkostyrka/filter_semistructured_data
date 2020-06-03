@@ -11,7 +11,7 @@ require("datatables")
 
 import 'bootstrap';
 import 'datatables';
-import 'datatables/media/css/jquery.dataTables.min.css';
+
 window.jQuery = $;
 window.$ = $;
 // Uncomment to copy all static images under ../images to the output folder and reference
