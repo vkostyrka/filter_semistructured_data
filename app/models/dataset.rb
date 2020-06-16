@@ -25,6 +25,8 @@ class Dataset < ApplicationRecord
   end
 
   def data_for_filtered_ids(ids, count)
+    return [] if ids.empty?
+
     max_rows_need_to_load = ids[count] || ids.last + 1
     if csv?
       all_data(max_rows_need_to_load).values_at(*ids[0...count])

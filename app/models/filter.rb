@@ -88,13 +88,13 @@ class Filter < ApplicationRecord
     when 'less'
       field.to_i < filter.value.to_i
     when 'equal'
-      field.to_s == filter.value.to_s
+      field.to_s.downcase == filter.value.to_s.downcase
     when 'more'
       field.to_i > filter.value.to_i
     when 'include'
-      field.include?(filter.value)
+      field.to_s.downcase.include?(filter.value.to_s.downcase)
     when 'start_with'
-      field.start_with?(filter.value)
+      field.to_s.downcase.start_with?(filter.value.to_s.downcase)
     else
       false
     end
