@@ -29,7 +29,6 @@ Filter Dashboard
         - row.each do |item|
           %td #{item}
 
-
 #create-filter-modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "create-filter-modal", :role => "dialog", :tabindex => "-1"}
   .modal-dialog
     .modal-content
@@ -53,9 +52,15 @@ Filter Dashboard
               %br/
               = f.text_field :value
               = f.hidden_field :dataset_id, value: @dataset.id
-
         .modal-footer
           = f.submit("Create", class: "btn-primary btn")
+
+%div
+  #stats-block
+  Statistic for column
+  = select_tag("stat_column", options_for_select(@headers))
+  .btn.btn-info#load-stats{"onclick": "loadStats()"}
+    Load stats
 
 :javascript
   var table = $('#data-table').DataTable();
@@ -120,4 +125,43 @@ Filter Dashboard
 
   function freshFilters() {
     location.reload();
+  }
+
+  function loadStats() {
+    let filterParam = makeFilterParamsQuery()
+    let count = $('#select-counts')[0].value
+    let column = $("#stat_column").children("option:selected").val()
+    let datasetId = window.location.href.split('/')[4]
+
+    let queryURL = `/dataset/${datasetId}/stats?filter=${filterParam}&count=${count}&column=${column}`
+    let statsBlock = $("#stats-block")
+
+    statsBlock.empty()
+
+    fetch(queryURL, {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    })
+    .then((response) => response.json())
+    .then((responseData) => {
+      if (responseData['error']) {
+        statsBlock.append( `<h4>${responseData['error']}</h4>` )
+      } else {
+        let content = "<table>";
+        let header_content = "<tr>"
+        let body_content = "<tr>"
+
+        for (let [key, value] of Object.entries(responseData['data'])) {
+          header_content += `<td>${key}</td>`
+          body_content += `<td>${value}</td>`
+        }
+
+        header_content += "</tr>"
+        body_content += "</tr>"
+        content = content + header_content + body_content + "</table>"
+        statsBlock.append(content)
+      }
+    });
   }

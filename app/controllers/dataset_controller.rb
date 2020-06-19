@@ -42,10 +42,48 @@ class DatasetController < ApplicationController
     end
   end
 
+  def stats
+    dataset = Dataset.find(params[:id])
+
+    redirect_to root_path, alert: "It's not your dataset" unless current_user.id == dataset.user_id
+
+    column = params[:column]
+
+    all_data = prepare_data(params, dataset)
+    index_header = dataset.headers.find_index(column)
+    column_data = all_data.map { |row| row[index_header] }
+
+    if array_consist_only_numbers?(column_data)
+      sample = DescriptiveStatistics::Stats.new(column_data.map(&:to_f))
+
+      data = {
+        min: sample.min.round(3),
+        max: sample.max.round(3),
+        median: sample.median.round(3),
+        mode: sample.mode.round(3),
+        variance: sample.variance.round(3)
+      }
+      render json: { data: data }
+    else
+      render json: { error: 'Use only digit data for stats block' }
+    end
+  end
+
   private
 
   def dataset_params
     params.require(:dataset).permit(:file_format, :file)
+  end
+
+  def array_consist_only_numbers?(list)
+    list.each do |item|
+      return false unless s_is_number?(item)
+    end
+    true
+  end
+
+  def s_is_number?(str)
+    str !~ /\D/
   end
 
   def prepare_data(params, dataset)

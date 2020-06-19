@@ -8,6 +8,7 @@ ruby ENV['CUSTOM_RUBY_VERSION'] || '2.7.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'carrierwave', '2.0.2'
 gem 'devise', '4.7.1'
+gem 'descriptive-statistics', '2.2.0'
 gem 'haml-rails', '2.0.1'
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '>= 0.18', '< 2.0'

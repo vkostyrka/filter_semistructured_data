@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   resources :user, only: %i[edit update]
   resources :dataset, only: %i[index create show destroy]
   resources :filter, only: %i[create]
+  get '/dataset/:id/stats', to: 'dataset#stats', as: 'stats'
 end
