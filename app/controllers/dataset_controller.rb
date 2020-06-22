@@ -55,12 +55,11 @@ class DatasetController < ApplicationController
 
     if array_consist_only_numbers?(column_data)
       sample = DescriptiveStatistics::Stats.new(column_data.map(&:to_f))
-
       data = {
         min: sample.min.round(3),
         max: sample.max.round(3),
         median: sample.median.round(3),
-        mode: sample.mode.round(3),
+        mode: sample.mode ? sample.mode.round(3) : 'Mode does not exist',
         variance: sample.variance.round(3)
       }
       render json: { data: data }
